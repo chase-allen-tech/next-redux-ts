@@ -1,0 +1,88 @@
+.channel-card-header .MuiCardHeader-title {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.channel-card-header .MuiCardHeader-subheader {
+    font-size: 12px;
+}
+
+.channel-card-content, .channel-card-content2 {
+    padding-top: 0 !important;
+}
+
+.channel-card-content p, .channel-card-content2 p {
+    font-size: 12px;
+}
+
+.channel-card-content2 {
+    font-weight: bold;
+    font-size: 12px;
+}
+
+.channel-card {
+    border-top: 6px solid #65C3A9;
+    font-size: 12px;
+}
+
+.card-body-inline {
+    justify-content: space-between;
+    padding: 3px;
+    border: 1px solid #D5D5D5;
+    border-radius: 7px;
+}
+
+.card-body-inline button {
+    font-size: 10px;
+}
+.channel-card-more-btn{
+    font-size: 10px !important;
+}
+
+.text-case-none {
+    text-transform: none !important;
+}
+
+.default-color {
+    color: #65C3A9 !important;
+}
+
+.content-title {
+    font-size: 25px;
+    font-weight: bold;
+    margin-top: 20px;
+    margin-bottom: 40px;
+}
+.sidebar-avatar {
+    margin-top: auto;
+}
+.sidebar-layout {
+    display: flex;
+    flex-direction: column;
+}
+.f-27 {
+    font-size: 27px;
+}
+
+.sidebar-icon {
+    font-size: 30px !important;
+    padding: 2px;
+    border-radius: 6px;
+    color: white;
+}
+
+.sidebar-icon-channel {
+    background-color: #65C3A9;
+}
+
+.sidebar-icon-entity {
+    background-color: #F8606A;
+}
+
+.sidebar-icon-contact {
+    background-color: #9179F2;
+}
+
+.sidebar-icon-group {
+    background-color: #79CAF2;
+}

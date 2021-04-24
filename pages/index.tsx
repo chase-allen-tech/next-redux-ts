@@ -1,32 +1,59 @@
-import {
-  NextPageContext,
-  NextComponentType,
-} from 'next';
-import { compose } from 'recompose';
 import { connect } from 'react-redux';
-import Page from '../containers/page';
-import { addTodo } from '../actions';
-import { Store } from '../store';
+import { addTodo, deleteTodo, onChangeTodo } from '../actions';
+import React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState } from '../reducers';
+import { Button, Container, Grid, TextField } from '@material-ui/core';
+import ChannelCard from '../components/channel-card';
 
-interface IndexPageContext extends NextPageContext {
-  store: Store;
-}
+const Todo = (props) => {
 
-const IndexPage: NextComponentType<IndexPageContext> = compose()(Page);
+  const { item, data } = useSelector((state: RootState) => state.todo);
+  const dispatch = useDispatch();
 
-IndexPage.getInitialProps = ({ store, req }) => {
-  const isServer: boolean = !!req;
-  const { todo } = store.getState();
+  console.log(item);
 
-  // we can add any custom data here
-  // for examle, the data from api server
-  store.dispatch(addTodo(Object.assign(todo.item, {
-    value: 'Hello World!',
-  })));
+  return (
+    <Container>
+      <p className="content-title">Channels</p>
 
-  return {
-    isServer,
-  };
-}
 
-export default connect()(IndexPage);
+      
+      <Grid container spacing={1}>
+        <Grid item xs={12} sm={6} md={3}><ChannelCard></ChannelCard></Grid>
+        <Grid item xs={12} sm={6} md={3}><ChannelCard></ChannelCard></Grid>
+        <Grid item xs={12} sm={6} md={3}><ChannelCard></ChannelCard></Grid>
+        <Grid item xs={12} sm={6} md={3}><ChannelCard></ChannelCard></Grid>
+        <Grid item xs={12} sm={6} md={3}><ChannelCard></ChannelCard></Grid>
+        <Grid item xs={12} sm={6} md={3}><ChannelCard></ChannelCard></Grid>
+        <Grid item xs={12} sm={6} md={3}><ChannelCard></ChannelCard></Grid>
+        <Grid item xs={12} sm={6} md={3}><ChannelCard></ChannelCard></Grid>
+      </Grid>
+    </Container>
+    // <React.Fragment>
+    //   <form onSubmit={(e) => {
+    //     e.preventDefault();
+    //     dispatch(addTodo({
+    //       value: item.value,
+    //     }));
+    //   }}>
+    //     <TextField id="standard-basic" type="text" value={item.value} label="Input Value"
+    //       onChange={e => dispatch(onChangeTodo({ value: e.target.value, }))} />
+    //     <br />
+    //     <input type="submit" value="SUBMIT" style={{ display: 'none', }}/>
+    //   </form>
+    //   <hr />
+    //   {data.map((item, index) => (
+    //     <p key={index}>
+    //       {item.value}
+    //       {' '}
+    //       <Button onClick={() => dispatch(deleteTodo(item))} variant="contained" color="primary" >
+    //         DELETE
+    //       </Button>
+    //     </p>
+    //   ))}
+    // </React.Fragment>
+  );
+};
+
+export default connect()(Todo);

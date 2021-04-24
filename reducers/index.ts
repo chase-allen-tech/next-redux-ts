@@ -5,6 +5,8 @@ export const initialState = {
   todo: todoState,
 };
 
-export default combineReducers({
+export const rootReducer =  combineReducers({
   todo,
 });
+
+export type RootState = ReturnType<typeof rootReducer>;
