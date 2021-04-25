@@ -6,27 +6,37 @@ import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import React from 'react';
-import { BusinessCenter, BusinessCenterOutlined, Dashboard, DashboardOutlined, Group, GroupOutlined, InsertDriveFile, InsertDriveFileOutlined } from '@material-ui/icons';
+import Link from 'next/link';
+import { BookOutlined, BusinessCenter, BusinessCenterOutlined, Dashboard, DashboardOutlined, Group, GroupOutlined, InsertDriveFile, InsertDriveFileOutlined } from '@material-ui/icons';
 
 const Sidebar = (props) => {
     return (
         <List component="nav" aria-labelledby="nested-lsit-subheader" className="h-100 sidebar-layout">
-            <ListItem button>
-                <ListItemIcon><DashboardOutlined className="sidebar-icon sidebar-icon-channel"/></ListItemIcon>
-                <ListItemText primary="Channel" />
-            </ListItem>
-            <ListItem button>
-                <ListItemIcon><BusinessCenterOutlined className="sidebar-icon sidebar-icon-entity"/></ListItemIcon>
-                <ListItemText primary="Entites" />
-            </ListItem>
-            <ListItem button>
-                <ListItemIcon><InsertDriveFileOutlined className="sidebar-icon sidebar-icon-contact"/></ListItemIcon>
-                <ListItemText primary="Contracts" />
-            </ListItem>
-            <ListItem button>
-                <ListItemIcon><GroupOutlined className="sidebar-icon sidebar-icon-group"/></ListItemIcon>
-                <ListItemText primary="Groupes" />
-            </ListItem>
+            <Link href="/">
+                <ListItem button>
+                    <ListItemIcon><DashboardOutlined className="sidebar-icon sidebar-icon-channel" /></ListItemIcon>
+                    <ListItemText primary="Channel" />
+                </ListItem>
+            </Link>
+            <Link href="/entity">
+                <ListItem button>
+                    <ListItemIcon><BusinessCenterOutlined className="sidebar-icon sidebar-icon-entity" /></ListItemIcon>
+                    <ListItemText primary="Entites" />
+                </ListItem>
+            </Link>
+
+            <Link href="/contact">
+                <ListItem button>
+                    <ListItemIcon><BookOutlined className="sidebar-icon sidebar-icon-contact" /></ListItemIcon>
+                    <ListItemText primary="Contracts" />
+                </ListItem>
+            </Link>
+            <Link href="/group">
+                <ListItem button>
+                    <ListItemIcon><GroupOutlined className="sidebar-icon sidebar-icon-group" /></ListItemIcon>
+                    <ListItemText primary="Groupes" />
+                </ListItem>
+            </Link>
             <CardHeader className="sidebar-avatar w-100"
                 avatar={
                     <Avatar aria-label="recipe">

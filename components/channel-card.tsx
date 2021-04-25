@@ -7,47 +7,19 @@ import CardMedia from '@material-ui/core/CardMedia';
 import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
 import Collapse from '@material-ui/core/Collapse';
-import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
-import { red } from '@material-ui/core/colors';
-import FavoriteIcon from '@material-ui/icons/Favorite';
-import ShareIcon from '@material-ui/icons/Share';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
-import { Backdrop, Button, Fade, Modal } from '@material-ui/core';
-
-const useStyles = makeStyles((theme) => ({
-    modal: {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    paper: {
-        backgroundColor: theme.palette.background.paper,
-        border: '2px solid #000',
-        boxShadow: theme.shadows[5],
-        padding: theme.spacing(2, 4, 3),
-    },
-}));
+import { Button } from '@material-ui/core';
 
 const ChannelCard = (props) => {
-    const classes = useStyles();
+    const {ctitle} = props;
     const [expanded, setExpanded] = React.useState(false);
-    const [open, setOpen] = React.useState(false);
-
-    const handleOpen = () => {
-        setOpen(true);
-    };
-
-    const handleClose = () => {
-        setOpen(false);
-    };
 
     const handleExpandClick = () => {
         setExpanded(!expanded);
     };
+
     return (
         <>
             <Card className="channel-card">
@@ -57,7 +29,7 @@ const ChannelCard = (props) => {
                             <MoreHorizIcon />
                         </IconButton>
                     }
-                    title="Conditions meteo"
+                    title={ctitle}
                     subheader="loremipsum.identification"
                 />
                 <CardMedia
@@ -71,25 +43,25 @@ const ChannelCard = (props) => {
                 </CardContent>
                 <CardContent className="channel-card-content2">
                     Contrat
-                    <Button className="float-right text-case-none default-color" style={{ marginTop: "-10px", }} onClick={handleOpen}><u><b>+ Ajouter</b></u></Button>
+                    <Button className="float-right text-case-none fg-color-primary" style={{ marginTop: "-10px", }} ><u><b>+ Ajouter</b></u></Button>
                     <Typography variant="body2" color="textSecondary" component="p" style={{ clear: "both", }}>
                         <div className="form-inline card-body-inline">
                             <label htmlFor="">Quotidien - Auto update</label>
-                            <Button className="float-right default-color" variant="contained" color="default" size="small">A JOUR</Button>
+                            <Button className="float-right fg-color-primary bk-color-secondary shadow-none" variant="contained" size="small">A JOUR</Button>
                         </div>
                         <div className="form-inline card-body-inline mt-1">
                             <label htmlFor="">Quotidien - Manual ...</label>
-                            <Button className="float-right default-color" variant="contained" color="default" size="small">A JOUR</Button>
+                            <Button className="float-right fg-color-primary bk-color-secondary shadow-none" variant="contained" size="small">A JOUR</Button>
                         </div>
                     </Typography>
                 </CardContent>
                 <CardActions disableSpacing>
-                    <Button className="channel-card-more-btn default-color" onClick={handleExpandClick} aria-expanded={expanded} aria-label="show more" >
+                    <Button className="channel-card-more-btn fg-color-primary" onClick={handleExpandClick} aria-expanded={expanded} aria-label="show more" >
                         <u>Voir tous les contrats (+1)</u>
                     </Button>
                 </CardActions>
                 <Collapse in={expanded} timeout="auto" unmountOnExit>
-                    <CardContent className="channel-card-content default-color">
+                    <CardContent className="channel-card-content fg-color-primary">
                         <Typography paragraph>Method:</Typography>
                         <Typography paragraph>
                             Heat 1/2 cup of the broth in a pot until simmering, add saffron and set aside for 10
@@ -98,25 +70,7 @@ const ChannelCard = (props) => {
                     </CardContent>
                 </Collapse>
             </Card>
-            <Modal
-                aria-labelledby="transition-modal-title"
-                aria-describedby="transition-modal-description"
-                className={classes.modal}
-                open={open}
-                onClose={handleClose}
-                closeAfterTransition
-                BackdropComponent={Backdrop}
-                BackdropProps={{
-                    timeout: 500,
-                }}
-            >
-                <Fade in={open}>
-                    <div className={classes.paper}>
-                        <h2 id="transition-modal-title">Transition modal</h2>
-                        <p id="transition-modal-description">react-transition-group animates me.</p>
-                    </div>
-                </Fade>
-            </Modal>
+            
         </>
     );
 };

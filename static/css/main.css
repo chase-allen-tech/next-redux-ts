@@ -1,3 +1,7 @@
+.bk-color-secondary {
+    background-color: #f5f5f5;
+}
+
 .channel-card-header .MuiCardHeader-title {
     font-size: 14px;
     font-weight: bold;
@@ -18,12 +22,14 @@
 .channel-card-content2 {
     font-weight: bold;
     font-size: 12px;
+    padding-bottom: 5px !important;
 }
 
 .channel-card {
     border-top: 6px solid #65C3A9;
     font-size: 12px;
 }
+
 
 .card-body-inline {
     justify-content: space-between;
@@ -43,8 +49,11 @@
     text-transform: none !important;
 }
 
-.default-color {
+.fg-color-primary {
     color: #65C3A9 !important;
+}
+.bk-color-primary {
+    background-color: #65C3A9 !important;
 }
 
 .content-title {
@@ -62,6 +71,17 @@
 }
 .f-27 {
     font-size: 27px;
+}
+.f-11 {
+    font-size: 11px !important;
+}
+
+.f-13 {
+    font-size: 13px !important;
+}
+
+.f-18 {
+    font-size: 18px !important;
 }
 
 .sidebar-icon {
@@ -85,4 +105,143 @@
 
 .sidebar-icon-group {
     background-color: #79CAF2;
+}
+.channel-modal-layout {
+   display: flex; 
+   align-items: center;
+   justify-content: center;
+   font-size: 11px;
+}
+
+.channel-modal-content {
+    width: 40%;
+    background-color: white;
+    padding: 30px;
+    border-radius: 20px;
+    max-height: 95%;
+}
+
+.modal-content-scroll {
+    padding: 0 20px 20px 3px;
+    max-height: 500px;
+    overflow-y: auto !important;
+}
+
+@media (max-width: 800px) {
+    .channel-modal-content {
+        width: 90%;
+    }
+}
+
+.channel-modal-content .form-group {
+    margin-bottom: 8px;
+}
+
+.channel-modal-content .form-control {
+    background-color: #F5F5F5 !important;
+    border: none;
+    border-radius: 0;
+    font-size: 11px;
+}
+
+.pagination-items {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+}
+
+.pagination-items {
+    border-collapse: collapse;
+}
+
+.pagination-items button {
+    padding: 5px 11px;
+    background-color: #F5F5F5;
+    color: black;
+    border: 1px solid #65C3A9;
+    border-collapse: collapse;
+}
+
+.pagination-active {
+    background-color: #65C3A9 !important;
+    color: white !important;
+}
+
+.pagination-prev {
+    border-radius: 20px 0 0 20px;
+    border-right: none !important;
+}
+.pagination-prev:disabled {
+    color: #aaa;
+}
+
+.pagination-next {
+    border-radius: 0 20px 20px 0;
+}
+
+.pagination-next:disabled {
+    color: #aaa;
+}
+
+.entity-table-row {
+    border-left: 5px solid #F8606A;
+    border-bottom: 8px solid #F5F5F5;
+}
+
+.entity-table-header {
+    border-bottom: 14px solid #F5F5F5;
+}
+
+.entity-table-header th {
+    color: #65C3A9 !important;
+    font-weight: bold;
+}
+
+.entity-table-footer .MuiTablePagination-caption {
+    position: absolute;
+    left: 20px;
+}
+
+.justify-bt {
+    justify-content: space-between;
+}
+
+
+.contact-card {
+    border-top: 6px solid #9179F2;
+    font-size: 12px;
+}
+
+.fab-outlined {
+    background-color: white !important;
+    border: 1px solid #333 !important;
+    box-shadow: none !important;
+}
+
+.mh-auto {
+    margin: auto 0;
+    vertical-align: middle;
+}
+
+.search-input svg{
+    position: absolute;
+    margin: 7px 3px 0 8px;
+}
+
+.search-input input {
+    padding-left: 30px;
+}
+
+.group-checkbox .MuiCheckbox-colorPrimary.Mui-checked {
+    color: #65C3A9;
+}
+
+.group-checkbox .MuiCheckbox-colorPrimary:not(.Mui-checked) svg {
+    color: #f5f5f5;
+    background-color: #F5F5F5 !important;
+}
+
+.border-right-none {
+    border-right: none !important;
 }

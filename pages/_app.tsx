@@ -28,7 +28,7 @@ class MyApp extends App<AppContext> {
             <Grid item xs={12} sm={12} md={2}>
               <Sidebar></Sidebar>
             </Grid>
-            <Grid item xs={12} sm={12} md={10}>
+            <Grid item xs={12} sm={12} md={10} className="bk-color-secondary">
               <Component {...props} />
             </Grid>
           </Grid>
