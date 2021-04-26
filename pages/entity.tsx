@@ -6,37 +6,47 @@ import { RootState } from '../reducers';
 import { Backdrop, Button, Container, Fab, Fade, Grid, Modal, TextField } from '@material-ui/core';
 import ChannelCard from '../components/channel-card';
 import EntityTable from '../components/entity-table';
+import { addEntity } from '../actions/entity_action';
+import { useMutation } from '@apollo/client';
+import { M_ADD_ENTITY } from '../constants/gqlQueries';
 
 const Entity = (props) => {
 
     const { item, data } = useSelector((state: RootState) => state.todo);
+    const dispatch = useDispatch();
+    const [add_entity] = useMutation(M_ADD_ENTITY); // For GQL
 
-    const [expanded, setExpanded] = React.useState(false);
     const [open, setOpen] = React.useState(false);
     const [values, setValues] = React.useState({
-        amount: '',
-        password: '',
-        weight: '',
-        weightRange: '',
-        showPassword: false,
+        name: '', identification: '', project: '', legal: 'authority', phone: '', address1: '', address2: '', city: '', zip: '', country: '', members: ['001']
     });
 
-    const handleOpen = () => {
-        console.log('ENTER');
-        setOpen(true);
-    };
-
-    const handleClose = () => {
-        setOpen(false);
-    };
-
-    // const handleExpandClick = () => {
-    //     setExpanded(!expanded);
-    // };
+    // Modal
+    const handleOpen = () => { setOpen(true); };
+    const handleClose = () => { setOpen(false); };
 
     const handleChange = (prop) => (event) => {
         setValues({ ...values, [prop]: event.target.value });
     };
+
+    const onAddEntity = async (e) => {
+        e.preventDefault();
+        try {
+            console.log(values);
+            let result = await add_entity({
+                variables: {
+                    obj: values
+                }
+
+            });
+            console.log(result);
+            alert("Successfully Added");
+        } catch (error) {
+            console.log(error);
+            alert("There is something wrong in your data");
+        }
+
+    }
 
     return (
         <Container>
@@ -58,49 +68,53 @@ const Entity = (props) => {
                 }}
             >
                 <Fade in={open}>
-                    <div className="channel-modal-content">
+                    <div className="channel-modal-content overflow-y-auto">
                         <h6 className="fg-color-primary mb-4">Ajouter un channel</h6>
-                        <form action="/" method="POST">
+                        <form action="/" method="POST" onSubmit={onAddEntity}>
                             <div className="form-group">
                                 <label htmlFor=""><b>Nom</b></label>
-                                <input value={values.weight} onChange={handleChange('weight')} type="text" className="form-control" />
+                                <input value={values.name} onChange={handleChange('name')} type="text" className="form-control" required/>
                             </div>
                             <div className="form-group">
                                 <label htmlFor=""><b>Identification</b></label>
-                                <input type="text" className="form-control" />
+                                <input value={values.identification} onChange={handleChange('identification')} type="number" className="form-control" required />
                             </div>
                             <div className="d-flex">
                                 <div className="form-group w-50">
                                     <label htmlFor=""><b>Legal</b></label>
-                                    <input type="text" className="form-control" />
+                                    <select value={values.legal} onChange={handleChange('legal')}  className="form-control">
+                                        <option value="authority">Authority</option>
+                                        <option value="company">Company</option>
+                                        <option value="association">Association</option>
+                                    </select>
                                 </div>
                                 <div className="form-group w-50 ml-2">
                                     <label htmlFor=""><b>Telephone</b></label>
-                                    <input type="text" className="form-control" />
+                                    <input value={values.phone} onChange={handleChange('phone')} type="number" className="form-control" required />
                                 </div>
                             </div>
                             <div className="form-group">
                                 <label htmlFor=""><b>Address (ligne 1)</b></label>
-                                <input type="text" className="form-control" />
+                                <input value={values.address1} onChange={handleChange('address1')} type="text" className="form-control" />
                             </div>
                             <div className="form-group">
                                 <label htmlFor=""><b>Address (ligne 2)</b></label>
-                                <input type="text" className="form-control" />
+                                <input value={values.address2} onChange={handleChange('address2')} type="text" className="form-control" />
                             </div>
                             <div className="form-group">
                                 <label htmlFor=""><b>Ville</b></label>
-                                <input type="text" className="form-control" />
+                                <input value={values.country} onChange={handleChange('country')} type="text" className="form-control" />
                             </div>
                             <div className="form-group">
                                 <label htmlFor=""><b>Code postal</b></label>
-                                <input type="text" className="form-control" />
+                                <input value={values.zip} onChange={handleChange('zip')} type="number" className="form-control" />
                             </div>
                             <div className="form-group">
                                 <label htmlFor=""><b>Pays</b></label>
-                                <input type="text" className="form-control" />
+                                <input value={values.city} onChange={handleChange('city')} type="text" className="form-control" />
                             </div>
 
-                            <Fab variant="extended" size="medium" className="bk-color-primary f-11"><span className="ml-4 mr-4 text-white">Valider</span></Fab>
+                            <Fab variant="extended" size="medium" className="bk-color-primary f-11" type="submit"><span className="ml-4 mr-4 text-white">Valider</span></Fab>
                         </form>
                     </div>
                 </Fade>

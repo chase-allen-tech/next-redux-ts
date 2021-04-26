@@ -43,7 +43,7 @@ function PaginationAction(props) {
                             </button>
                         );
                     }
-                    return <>{children}</>;
+                    return <div key={index}>{children}</div>;
                 })}
             </ul>
         </nav>

@@ -44,7 +44,7 @@ const ChannelCard = (props) => {
                 <CardContent className="channel-card-content2">
                     Contrat
                     <Button className="float-right text-case-none fg-color-primary" style={{ marginTop: "-10px", }} ><u><b>+ Ajouter</b></u></Button>
-                    <Typography variant="body2" color="textSecondary" component="p" style={{ clear: "both", }}>
+                    <Typography variant="body2" color="textSecondary" component="div" style={{ clear: "both", }}>
                         <div className="form-inline card-body-inline">
                             <label htmlFor="">Quotidien - Auto update</label>
                             <Button className="float-right fg-color-primary bk-color-secondary shadow-none" variant="contained" size="small">A JOUR</Button>

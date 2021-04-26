@@ -1,0 +1,173 @@
+############################ ADD USER ########################################
+mutation insertUser($obj: UserInput!) {
+  userAdd(user: $obj) {
+    name,
+		identifier
+	}
+} 
+
+    # PARAM
+    {
+        "obj": {
+            "name": "Milos1",
+            "email": "wdev5551@gmail.com"
+        }
+    }
+
+    # Result
+    {
+        "data": {
+            "userAdd": {
+                "name": "Milos1",
+                "identifier": "cddcd0dd-d868-4977-b763-587b80d17321"
+            }
+        }
+    }
+
+############## SET ME ####################################################################
+mutation {
+  setMe(identifier: "cddcd0dd-d868-4977-b763-587b80d17321") {
+    me {
+      name
+    }
+  }
+}
+
+############## GET ME ####################################################################
+{
+	getMe {
+    me {
+      name,
+      identifier
+    }
+  }
+}
+############## ADD Entity ####################################################################
+mutation mEntityAdd($obj: EntityInput!){
+  entityAdd(entity: $obj) {
+    identifier,
+    name,
+    project,
+    identification,
+    legal,
+    phone,
+    address1,
+    address2,
+    city,
+    zip,
+    country,
+    owner,
+    members,
+    groups,
+    channels,
+    contracts,
+    createdAt,
+    modifiedAt,
+    deletedAt
+  }
+}
+
+    ##### Query
+    {
+        "obj": {
+            "name": "Third Entity",
+            "identification": "003",
+            "project": "First Project",
+            "legal": "authority",
+            "phone": "8018881224",
+            "address1": "1 street, France",
+            "address2": "2 street, France",
+            "city": "Paris",
+            "zip": "4242",
+            "country": "France",
+            "members": ["002", "003"]
+        }
+
+    }
+
+    # Result
+    {
+        "data": {
+            "entityAdd": {
+            "identifier": "958a4bc0-6f4e-426c-9d94-92c344a91392",
+            "name": "First Group",
+            "project": null,
+            "identification": "001",
+            "legal": "authority",
+            "phone": "8018881224",
+            "address1": "1 street, France",
+            "address2": "2 street, France",
+            "city": "Paris",
+            "zip": "4242",
+            "country": "France",
+            "owner": "cddcd0dd-d868-4977-b763-587b80d17321",
+            "members": [
+                "cddcd0dd-d868-4977-b763-587b80d17321"
+            ],
+            "groups": [],
+            "channels": [],
+            "contracts": null,
+            "createdAt": "2021-04-26T04:30:51.254965",
+            "modifiedAt": null,
+            "deletedAt": null
+            }
+        }
+    }
+
+    {
+        "data": {
+            "entityAdd": {
+            "identifier": "6fd9ed76-fd12-423d-9afd-8ae6bee4b962",
+            "name": "Second Entity",
+            "project": null,
+            "identification": "002",
+            "legal": "authority",
+            "phone": "8018881224",
+            "address1": "1 street, France",
+            "address2": "2 street, France",
+            "city": "Paris",
+            "zip": "4242",
+            "country": "France",
+            "owner": "cddcd0dd-d868-4977-b763-587b80d17321",
+            "members": [
+                "cddcd0dd-d868-4977-b763-587b80d17321"
+            ],
+            "groups": [],
+            "channels": [],
+            "contracts": null,
+            "createdAt": "2021-04-26T04:30:51.254965",
+            "modifiedAt": null,
+            "deletedAt": null
+            }
+        }
+    }
+
+
+################# Channel  ##################################################### 
+mutation channelAdd($obj: ChannelInput!) {
+  channelAdd(channel: $obj) {
+    identifier,
+    name
+  }
+}
+
+{
+  "obj": {
+    "name": "First Input",
+    "description": "First Content",
+    "identification": "first-001",
+    "read": ["3"],
+    "write": ["3"],
+    "cover": ["3"],
+  }
+}
+
+#########################################################################################
+# mutation {
+#   userAdd(user: {
+#     name: "Milos",
+#     email: "wdev555@gmail.com"
+#   }) {
+#     name
+#   }
+# }

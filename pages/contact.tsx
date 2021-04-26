@@ -82,8 +82,8 @@ const Contact = (props) => {
                 {(rowsPerPage > 0
                     ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     : rows
-                ).map((row) => (
-                    <Grid item xs={12} sm={6} md={3}><ContactCard ctitle={row.name} /></Grid>
+                ).map((row, index) => (
+                    <Grid key={index} item xs={12} sm={6} md={3}><ContactCard ctitle={row.name} /></Grid>
                 ))}
                 {emptyRows > 0 && (
                     true
@@ -116,7 +116,7 @@ const Contact = (props) => {
                 }}
             >
                 <Fade in={open}>
-                    <div className="channel-modal-content">
+                    <div className="channel-modal-content overflow-y-auto">
                         <h6 className="fg-color-primary mt-2 mb-2">Ajouter un channel</h6>
                         <form action="/" method="POST">
                             <div className="form-group">

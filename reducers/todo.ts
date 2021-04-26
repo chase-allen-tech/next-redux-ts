@@ -5,47 +5,27 @@ import {
 } from '../constants/actionTypes';
 
 export const initialState = {
-  item: {
-    value: '',
-  },
+  item: "",
   data: [],
 };
 
-export default (state = initialState, action) => {
-  const {
-    type,
-    item,
-  } = action;
+const todo = (state = initialState, action) => {
+  const { type, item, } = action;
 
   switch (type) {
     case TODO_ONCHANGE: {
-      return Object.assign({}, state, {
-        item,
-      });
+      return {...state, item};
     }
 
     case TODO_ADD: {
-      if (item.value === '') {
-        return state;
-      }
-
-      return Object.assign({}, state, {
-        item: {
-          value: '',
-        },
-        data: [
-          ...(state.data),
-          item,
-        ],
-      });
+      if (item === '') { return state; }
+      return {...state, data:[...(state.data), item]};
     }
 
     case TODO_DELETE: {
       const { data, ...restState } = state;
-      const updated = [...data].filter(_item => _item.value !== item.value);
-      return Object.assign({}, restState, {
-        data: updated,
-      });
+      const updated = [...data].filter(_item => _item !== item);
+      return {...state, data: updated};
     }
 
     default: {
@@ -53,3 +33,5 @@ export default (state = initialState, action) => {
     }
   }
 };
+
+export default todo;

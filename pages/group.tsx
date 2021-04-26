@@ -63,7 +63,7 @@ const Group = (props) => {
                 }}
             >
                 <Fade in={open}>
-                    <div className="channel-modal-content">
+                    <div className="channel-modal-content overflow-y-auto">
                         <h6 className="fg-color-primary mb-4">Ajouter un groupe</h6>
                         <form action="/" method="POST" className="modal-content-scroll">
                             <div className="form-group">

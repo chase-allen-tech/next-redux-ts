@@ -123,7 +123,12 @@
 
 .modal-content-scroll {
     padding: 0 20px 20px 3px;
-    max-height: 500px;
+
+    max-height: 450px;
+    overflow-y: auto !important;
+}
+
+.overflow-y-auto {
     overflow-y: auto !important;
 }
 

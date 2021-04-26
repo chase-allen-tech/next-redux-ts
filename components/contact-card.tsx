@@ -99,7 +99,7 @@ const ContactCard = (props) => {
                         <Button className="float-right fg-color-primary text-case-none ml-auto" size="small" style={{ marginTop: "-3px" }} onClick={handleOpen}><b><u>+ Ajouter</u></b></Button>
                     </div>
 
-                    <Typography variant="body2" color="textSecondary" component="p" style={{ clear: "both", }}>
+                    <Typography variant="body2" color="textSecondary" component="div" style={{ clear: "both", }}>
                         <div className="form-inline card-body-inline">
                             <label htmlFor="">Cnditions meteo</label>
                             <a href="#" className="float-right fg-color-primary"><u>Voir</u></a>
@@ -140,7 +140,7 @@ const ContactCard = (props) => {
                 }}
             >
                 <Fade in={open}>
-                    <div className="channel-modal-content">
+                    <div className="channel-modal-content overflow-y-auto overflow-y-auto">
                         <h6 className="fg-color-primary mb-4">Ajouter un channel</h6>
                         <div className="d-flex">
                             <div>
@@ -161,7 +161,7 @@ const ContactCard = (props) => {
                             )}
 
                         </div>
-                        <Fab variant="extended" size="medium" className="bk-color-primary f-11 fab-outlined"><span className="ml-4 mr-4 fg-color-primary">Valider</span></Fab>
+                        <Fab variant="extended" size="medium" className="bk-color-primary f-11 fab-outlined mt-3"><span className="ml-4 mr-4 fg-color-primary">Valider</span></Fab>
                     </div>
                 </Fade>
             </Modal>

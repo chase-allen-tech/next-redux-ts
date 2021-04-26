@@ -1,0 +1,327 @@
+type Query {
+  me: ID!
+  channel(channelIdentifier: ID!): Channel
+  channelFromIdentification(identification: String!): Channel
+  channelsOfSource(entityIdentifier: ID!): [Channel]
+  channelsOfCover(coverIdentifier: ID!): [Channel]
+  contracts: [Contract!]!
+  activeContracts: [Contract!]!
+  contractsByChannel(channelIdentifier: ID!): [Contract!]!
+  contract(channelIdentifier: ID!, contractIdentifier: ID!): Contract
+  entities: [Entity]
+  entitiesOfName(entityName: String): [Entity]
+  entity(entityIdentifier: ID!): Entity
+  entityFromIdentification(entityIdentification: ID!): Entity
+  fieldsByContract(contractIdentifier: ID!): [Field!]!
+  groupsByEntity(entityIdentifier: ID!): [Group!]!
+  group(groupIdentifier: ID!): Group
+  getMe: Iam
+  user(userIdentifier: ID!): User
+  users: [User!]!
+}
+
+type Mutation {
+  _empty: String
+  channelAdd(channel: ChannelInput): Channel
+  channelUpdate(channelIdentifier: ID!, channel: ChannelInput): Channel
+  channelDelete(channelIdentifier: ID!): ID
+  channelAllowToRead(channelIdentifier: ID!, allowed: ID!): Boolean
+  channelAllowToWrite(channelIdentifier: ID!, allowed: ID!): Boolean
+  contractAdd(channelIdentifier: ID!, contract: ContractInput!): Contract
+  contractUpdate(
+    channelIdentifier: ID!
+    contractIdentifier: ID!
+    contract: ContractInput!
+  ): Contract
+  contractDelete(channelIdentifier: ID!, contractIdentifier: ID!): Contract
+  entityAdd(entity: EntityInput!): EntityDetailed
+  entityUpdate(entityIdentifier: ID!, entity: EntityInput): EntityDetailed
+  entityDelete(entityIdentifier: ID!): ID
+  fieldActivate(contractIdentifier: ID!, fieldName: String): Field
+  fieldDeactivate(contractIdentifier: ID!, fieldName: String): Field
+  groupAdd(group: GroupInput): Group
+  groupUpdate(groupIdentifier: ID!, group: GroupInput): Group
+  groupDelete(groupIdentifier: ID!): Group
+  setMe(identifier: ID!): Iam
+  userAdd(user: UserInput!): User
+  userUpdate(userIdentifier: ID!, user: UserInput!): User
+  userDelete(userIdentifier: ID!): User
+}
+
+enum AccessProtocol {
+  OPEN_URL
+  SFTP
+}
+
+type OpenAccess {
+  url: String!
+}
+
+input OpenAccessInput {
+  url: String!
+}
+
+type PasswordAccess {
+  server: String!
+  port: Int
+  login: String
+}
+
+input PasswordAccessInput {
+  server: String!
+  port: Int
+  login: String
+  password: String!
+}
+
+type AccessMethod {
+  open: OpenAccess
+  password: PasswordAccess
+}
+
+input AccessMethodInput {
+  open: OpenAccessInput
+  password: PasswordAccessInput
+}
+
+type Channel {
+  identifier: ID!
+  name: String!
+  description: String
+  identification: String
+  owner: ID!
+  read: [ID]
+  write: [ID]
+  cover: [ID]
+  contracts: [Contract]
+  sourceIdentifier: ID
+  createdAt: String
+  modifiedAt: String
+  deletedAt: String
+}
+
+input ChannelInput {
+  name: String!
+  description: String
+  identification: String
+  read: [ID]
+  write: [ID]
+  cover: [ID]
+  sourceIdentifier: ID
+}
+
+type Contract {
+  identifier: ID!
+  name: String
+  version: String
+  description: String
+  mode: ContractMode
+  modality: ContractModality
+  isActive: Boolean
+  owner: ID
+  tags: [String]
+  accessKeys: [String]
+  contractFields: [Field!]!
+  channelIdentifier: ID!
+}
+
+input ContractInput {
+  name: String!
+  version: String
+  description: String
+  mode: ContractMode!
+  modality: ContractModalityInput!
+  tags: [String]
+  contractFields: [FieldInput!]!
+}
+
+enum ContractMode {
+  PUSH
+  STREAM
+  DEMAND
+  COMPUTE
+  TRIGGER
+  ARCHIVE
+}
+
+type PushModality {
+  beat: String
+}
+
+input PushModalityInput {
+  beat: String
+}
+
+type OnDemandModality {
+  protocol: AccessProtocol!
+  connect: AccessMethod!
+}
+
+input OnDemandModalityInput {
+  protocol: AccessProtocol!
+  connect: AccessMethodInput!
+}
+
+input ArchiveModalityInput {
+  encrypted: Boolean
+  chained: Boolean
+}
+
+enum ComputeOperation {
+  AVG
+}
+
+type ComputeModality {
+  inputs: [String!]!
+  operation: ComputeOperation
+}
+
+input ComputeModalityInput {
+  inputs: [String!]!
+  operation: String
+}
+
+enum TriggerCondition {
+  CHANGE
+}
+
+type TriggerModality {
+  key: String
+  condition: TriggerCondition
+  hook: String
+}
+
+input TriggerModalityInput {
+  key: String
+  condition: String
+  hook: String
+}
+
+type ContractModality {
+  update: PushModality
+  access: OnDemandModality
+  computation: ComputeModality
+  event: TriggerModality
+}
+
+input ContractModalityInput {
+  update: PushModalityInput
+  access: OnDemandModalityInput
+  computation: ComputeModalityInput
+  event: TriggerModalityInput
+  folder: ArchiveModalityInput
+}
+
+type EntityDetailed {
+  identifier: ID!
+  name: String!
+  project: String
+  identification: String!
+  legal: String!
+  phone: String!
+  address1: String
+  address2: String
+  city: String
+  zip: String
+  country: String!
+  owner: ID!
+  members: [ID]
+  groups: [ID]
+  channels: [ID]
+  contracts: [ID]
+  createdAt: String
+  modifiedAt: String
+  deletedAt: String
+}
+
+type Entity {
+  identifier: ID!
+  name: String!
+  project: String
+  identification: String!
+  legal: String!
+  phone: String!
+  address1: String
+  address2: String
+  city: String
+  zip: String
+  country: String!
+  createdAt: String
+  modifiedAt: String
+  deletedAt: String
+}
+
+input EntityInput {
+  name: String!
+  identification: String!
+  project: String
+  legal: String!
+  phone: String!
+  address1: String
+  address2: String
+  city: String
+  zip: String
+  country: String!
+  members: [ID]
+}
+
+type Field {
+  name: String
+  description: String
+  dataType: String
+  nullSymbol: String
+  units: String
+  range_min: String
+  range_max: String
+  is_active: Boolean
+}
+
+input FieldInput {
+  name: String
+  description: String
+  dataType: String
+  nullSymbol: String
+  units: String
+  range_min: String
+  range_max: String
+  is_active: Boolean
+}
+
+type Group {
+  identifier: ID!
+  name: String!
+  entityIdentifier: ID!
+  entity: Entity!
+}
+
+input GroupInput {
+  name: String!
+  entityIdentifier: ID!
+}
+
+type Iam {
+  me: User
+}
+
+input IamInput {
+  identifier: ID!
+}
+
+type User {
+  identifier: ID!
+  name: String
+  email: String
+  project: String
+  entityIdentifiers: [ID]
+  entities: [Entity]
+  groupIdentifiers: [ID]
+  groups: [Group]
+}
+
+input UserInput {
+  name: String!
+  email: String!
+  project: String
+  entityIdentifiers: [ID]
+  groupIdentifiers: [ID]
+}
