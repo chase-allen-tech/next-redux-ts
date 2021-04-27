@@ -24,9 +24,18 @@ mutation insertUser($obj: UserInput!) {
         }
     }
 
+    {
+  "data": {
+    "userAdd": {
+      "name": "Milos2",
+      "identifier": "e79a864b-cf6c-44c9-a3b5-aca53f7e9e7a"
+    }
+  }
+}
+
 ############## SET ME ####################################################################
 mutation {
-  setMe(identifier: "cddcd0dd-d868-4977-b763-587b80d17321") {
+  setMe(identifier: "e79a864b-cf6c-44c9-a3b5-aca53f7e9e7a") {
     me {
       name
     }
@@ -142,7 +151,13 @@ mutation mEntityAdd($obj: EntityInput!){
         }
     }
 
+mutation del($obj: ID!){
+  entityDelete(entityIdentifier: $obj) 
+}
+{
+        "obj": "001"
 
+    }
 ################# Channel  ##################################################### 
 mutation channelAdd($obj: ChannelInput!) {
   channelAdd(channel: $obj) {

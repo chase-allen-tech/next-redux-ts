@@ -1,0 +1,18 @@
+query {
+        entities {
+            identifier,
+            name,
+            project,
+            identification,
+            legal,
+            phone,
+            address1,
+            address2,
+            city,
+            zip,
+            country,
+            createdAt,
+            modifiedAt,
+            deletedAt
+        }
+    }

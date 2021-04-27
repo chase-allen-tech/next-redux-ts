@@ -1,0 +1,191 @@
+# GraphiQL Testing
+
+#### User Creation
+```
+mutation userCreation($user: UserInput!) {
+  userAdd(user: $user) {
+    identifier
+    name
+  }
+}
+```
+
+query variables:
+```
+{
+	"user": {
+    "name": "John Smith",
+    "email": "john.smith@google.com"
+  }
+}
+```
+
+result
+{
+  "data": {
+    "userAdd": {
+      "identifier": "9cbb9e2d-cafe-4a60-a84e-8c975eb6ce36",
+      "name": "John Smith"
+    }
+  }
+}
+
+
+### Test fake authentication
+```
+mutation setMe($userId: ID!) {
+  setMe(identifier: $userId) {
+    me {
+      identifier
+      name
+      email
+    }
+  }
+}
+```
+
+Variable
+
+```
+{
+	"userId": "9cbb9e2d-cafe-4a60-a84e-8c975eb6ce36"
+}
+```
+
+Verification
+
+```
+query getMe {
+  getMe {
+    me {
+      identifier
+      name
+      email
+    }
+  }
+}
+```
+
+#### Entity
+mutation entityCreation($entity: EntityInput!) {
+  entityAdd(entity: $entity) {
+    identifier
+    name
+    owner
+  }
+}
+
+query variable:
+
+{
+	"entity": {
+		"name": "Acme Inc.",
+	    "identification": "234 321 435",
+	    "legal": "company",
+	    "phone": "+33 465879831",
+	    "country": "FR"
+  }
+}
+
+result:
+{
+  "data": {
+    "entityAdd": {
+      "identifier": "b7a8ba46-37f7-4952-baee-e44e8129f631",
+      "name": "Acme Inc.",
+      "owner": "ff67f289-c11f-4269-8d15-ac628bc8c4f3"
+    }
+  }
+}
+
+## Group
+
+mutation groupCreation($group: GroupInput!) {
+  groupAdd(group: $group) {
+    identifier
+    entity {
+      name
+    }
+  }
+}
+
+query variable
+{
+	"group": {
+    "name": "Our Friends",
+    "entityIdentifier": "dd0eb96f-11f1-43de-9224-aa3fb9880f61"
+  }
+}
+
+## Channel
+
+mutation channelCreation($channel: ChannelInput!){
+  channelAdd(channel: $channel) {
+    identifier
+    name
+ 	createdAt
+  }
+}
+
+Variable
+
+{
+  "sourceIdentifier": "d7cdc234-9814-4aba-93b8-351032bdbd76",
+  "channel": {
+    "name": "General Channel",
+    "identification": "com.acme.general",
+    "cover": [
+      "f1fa3333-357c-40d1-8153-862efca6d1da"
+    ],
+  }
+}
+
+Result
+
+{
+  "data": {
+    "channelAdd": {
+      "identifier": "b719f5b0-95b7-4b84-9fe1-dd9d46002810",
+      "name": "General Channel",
+      "createdAt": "2021-02-06T18:06:45.090048"
+    }
+  }
+}
+
+
+## Contract
+
+mutation contractCreation($contract: ContractInput!) {
+  contractAdd(contract: $contract) {
+    identifier
+    name
+  }
+}
+
+Variable
+
+{
+    "channelIdentifier": "035fed71-5250-4718-b5bd-b16ca091eb60",
+	"contract": {
+    "name": "Temperature",
+    "version": "0.1",
+    "mode": "push",
+    "modality": {
+        "update": {
+            "beat": "60"
+        }
+    },
+    "contractFields": []
+  } 
+}
+
+Result
+
+{
+  "data": {
+    "contractAdd": {
+      "identifier": "f767f4f5-9c6b-49f5-bc6e-d36080d3b46f",
+      "name": "Temperature"
+    }
+  }
+}

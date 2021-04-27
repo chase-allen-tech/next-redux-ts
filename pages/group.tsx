@@ -151,7 +151,6 @@ const Group = (props) => {
                                     </div>
                                 </div>
 
-
                                 <div className="search-input mb-2 mt-2 position-relative">
                                     <SearchIcon className="f-18 fg-color-primary" />
                                     <input type="text" className="form-control" />

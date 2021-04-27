@@ -1,106 +1,118 @@
 import { connect } from 'react-redux';
 import { addTodo, deleteTodo, onChangeTodo } from '../actions';
-import {getChannels} from '../actions/channel_action';
-import React from 'react';
+import { addChannel, getChannels } from '../actions/channel_action';
+import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../reducers';
 import { Backdrop, Button, Container, Fab, Fade, Grid, Modal, TextField } from '@material-ui/core';
 import ChannelCard from '../components/channel-card';
 import PaginationAction from '../components/pagination-action';
+import { useMutation, useQuery } from '@apollo/client';
+import { M_ADD_CHANNEL, M_DELETE_CHANNEL, M_DELETE_ENTITY, M_UPDATE_CHANNEL, Q_GET_CHANNELS_OF_SOURCE } from '../constants/gqlQueries';
 
 const Channel = (props) => {
+    const entityIdentifier = "665b9f8b-9475-4942-8232-1e675660221f";
 
-    const { item, data } = useSelector((state: RootState) => state.todo);
-    const dispatch = useDispatch();
+    ////////////////////// State ////////////////////////////
+    const [reload, setReload] = React.useState(false);
+    useEffect(() => { setReload(false); });
 
-    ////////////////////// Rows Start ////////////////////////////
-    function createData(name, calories, fat) {
-        return { name, calories, fat };
-    }
+    ////////////////////// Server Data ////////////////////////////
+    const { loading, error, data } = useQuery(Q_GET_CHANNELS_OF_SOURCE, {variables: { obj: entityIdentifier }, fetchPolicy: reload ? "no-cache" : "cache-and-network" })
+    const rows = data != undefined && data.hasOwnProperty("channels") ? data.entities : [];
+    const [update_channel] = useMutation(M_UPDATE_CHANNEL);
+    const [delete_channel] = useMutation(M_DELETE_CHANNEL);
+    const [add_channel] = useMutation(M_ADD_CHANNEL);
 
-    const rows = [
-        createData('Cupcake', 305, 3.7),
-        createData('Donut', 452, 25.0),
-        createData('Eclair', 262, 16.0),
-        createData('Frozen yoghurt', 159, 6.0),
-        createData('Gingerbread', 356, 16.0),
-        createData('Honeycomb', 408, 3.2),
-        createData('Ice cream sandwich', 237, 9.0),
-        createData('Jelly Bean', 375, 0.0),
-        createData('KitKat', 518, 26.0),
-        createData('Lollipop', 392, 0.2),
-        createData('Marshmallow', 318, 0),
-        createData('Nougat', 360, 19.0),
-        createData('Oreo', 437, 18.0),
-    ].sort((a, b) => (a.calories < b.calories ? -1 : 1));
-
+    ////////////////////// Pagination Start ////////////////////////////
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(8);
 
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
-    const handleChangePage = (event, newPage) => {
-        setPage(newPage);
-    };
+    const handleChangePage = (event, newPage) => { setPage(newPage); };
 
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(parseInt(event.target.value, 10));
         setPage(0);
     };
-    ////////////////////// Rows End ////////////////////////////
 
     ////////////////////// Modal Start ////////////////////////////
     const [open, setOpen] = React.useState(false);
+    const [identifier, setIdentifier] = React.useState(null);
     const [values, setValues] = React.useState({
-        amount: '',
-        password: '',
-        weight: '',
-        weightRange: '',
-        showPassword: false,
+        identifier: '', name: '', description: '', identification: '', owner: '', read: '',  write: '',
+        cover:'', contracts: '', sourceIdentifier: '', createdAt: '', modifiedAt: '', deletedAt: ''
     });
 
-    const handleOpen = () => {
-        console.log('ENTER');
-        setOpen(true);
+    const handleOpen = (id) => { 
+        console.log(values);
+        if(id >= 0) {
+            setValues(rows[id]);
+            setIdentifier(rows[id].identifier);
+        } else {
+            setValues({
+                identifier: '', name: '', description: '', identification: '', owner: '', read: '',  write: '',
+                cover:'', contracts: '', sourceIdentifier: '', createdAt: '', modifiedAt: '', deletedAt: ''
+            });
+            setIdentifier(null);
+        }
+        setOpen(true); 
     };
-
-    const handleClose = () => {
-        setOpen(false);
-    };
-
+    const handleClose = () => { setOpen(false); };
     const handleChange = (prop) => (event) => {
         setValues({ ...values, [prop]: event.target.value });
     };
-    ////////////////////// Modal End ////////////////////////////
+
+    ////////////////////// Action Start ////////////////////////////
+    const onDeleteChannel = async (e) => {
+        if (!confirm("Are you going to delete this record?")) return;
+        try {
+            let result = await delete_channel({ variables: { obj: identifier } });
+            console.log(result);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const onEditChannel = async (e) => {
+        e.preventDefault();
+        try {
+            console.log({ variables: { obj: identifier, obj1: values } });
+            let payload = {
+            }
+
+            let result = await update_channel({ variables: { obj: identifier, obj1: payload } });
+            alert("Successfully Updated");
+            handleClose();
+            setReload(true);
+        } catch (error) {
+            console.log(error);
+            alert("There is something wrong in your data");
+        }
+    }
+
+    const onAddChannel = async (e) => {
+        e.preventDefault();
+        try {
+            console.log(values);
+            let result = await add_channel({ variables: { obj: values } });
+            console.log(result);
+            alert("Successfully Added");
+            handleClose();
+            setReload(true);
+        } catch (error) {
+            console.log(error);
+            alert("There is something wrong in your data");
+        }
+    }
 
     return (
         <Container>
-            {/* ************************************************** */}
-            <React.Fragment>
-                <form onSubmit={(e) => {
-                    e.preventDefault();
-                    dispatch(addTodo( item ));
-                }}>
-                    <TextField id="standard-basic" type="text" value={item.value} label="Input Value"
-                        onChange={e => getChannels( e.target.value)} />
-                    <br />
-                    <input type="submit" value="SUBMIT" style={{ display: 'none', }} />
-                </form>
-                <hr />
-                {data.map((item, index) => (
-                    <p key={index}>
-                        {item}
-                        {' '}
-                        <Button onClick={() => dispatch(deleteTodo(item))} variant="contained" color="primary" >
-                            DELETE
-                        </Button>
-                    </p>
-                ))}
-            </React.Fragment>
-            {/* ************************************************** */}
+            
             <div className="d-flex  justify-bt">
                 <div className="content-title">Channels</div>
-                <Fab onClick={handleOpen} variant="extended" size="medium" className="bk-color-primary float-right mt-4"><span className="ml-4 mr-4 text-white text-case-none"><b>Ajouter une channels +</b></span></Fab>
+                <Fab onClick={e => handleOpen(-1)} variant="extended" size="medium" className="bk-color-primary float-right mt-4"><span className="ml-4 mr-4 text-white text-case-none"><b>Ajouter une channels +</b></span></Fab>
             </div>
 
             <Grid container spacing={1}>
@@ -143,10 +155,10 @@ const Channel = (props) => {
                 <Fade in={open}>
                     <div className="channel-modal-content overflow-y-auto">
                         <h6 className="fg-color-primary mt-2 mb-2">Ajouter un channel</h6>
-                        <form action="/" method="POST">
+                        <form action="/" method="POST" onSubmit={identifier == null? onAddChannel : onEditChannel}>
                             <div className="form-group">
                                 <label htmlFor=""><b>Nom</b></label>
-                                <input value={values.weight} onChange={handleChange('weight')} type="text" className="form-control" />
+                                <input value={values.name} onChange={handleChange('name')} type="text" className="form-control" required />
                             </div>
                             <div className="form-group">
                                 <label htmlFor=""><b>Description</b></label>
@@ -174,6 +186,28 @@ const Channel = (props) => {
                 </Fade>
             </Modal>
         </Container>
+
+    //     <React.Fragment>
+    //     <form onSubmit={(e) => {
+    //         e.preventDefault();
+    //         dispatch(addTodo( item ));
+    //     }}>
+    //         <TextField id="standard-basic" type="text" value={item.value} label="Input Value"
+    //             onChange={e => getChannels( e.target.value)} />
+    //         <br />
+    //         <input type="submit" value="SUBMIT" style={{ display: 'none', }} />
+    //     </form>
+    //     <hr />
+    //     {data.map((item, index) => (
+    //         <p key={index}>
+    //             {item}
+    //             {' '}
+    //             <Button onClick={() => dispatch(deleteTodo(item))} variant="contained" color="primary" >
+    //                 DELETE
+    //             </Button>
+    //         </p>
+    //     ))}
+    // </React.Fragment>
 
         // <React.Fragment>
         //   <form onSubmit={(e) => {

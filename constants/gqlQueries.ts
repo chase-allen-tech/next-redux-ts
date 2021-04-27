@@ -1,6 +1,6 @@
 import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
 
-export const Q_GET_CHANNELS = gql`
+export const Q_GET_ME = gql`
 {
     getMe {
         me {
@@ -54,6 +54,7 @@ export const Q_GET_CHANNELS_OF_COVER = gql`
 export const Q_GET_ENTITIES = gql`
     query {
         entities {
+            identifier,
             name,
             project,
             identification,
@@ -84,6 +85,8 @@ export const Q_GET_GROUPS_BY_ENTITY = gql`
     }
 `;
 
+// *******************************************************************************************************
+
 // name!, email!, project, entityIdentifiers, groupIdentifiers
 export const M_ADD_USER = gql`
     mutation insertUser($obj: UserInput!) {
@@ -103,6 +106,8 @@ export const M_SET_ME = gql`
         }
     }
 `;
+
+// *******************************************************************************************************
 
 // export const M_CHANNEL_ALLOW_TO_WRITE = gql`
 //     mutation mChannelAllowToWrite($obj: ID!, $obj1: ID!) {
@@ -131,7 +136,11 @@ export const M_ADD_CHANNEL = gql`
             read,
             write,
             cover,
-            contracts,
+            contracts {
+                identifier, name, version, description, mode, isActive, owner, tags,
+                accessKeys, channelIdentifier,
+           
+            },
             sourceIdentifier,
             createdAt,
             modifiedAt,
@@ -139,6 +148,24 @@ export const M_ADD_CHANNEL = gql`
         }
     }
 `;
+
+export const M_UPDATE_CHANNEL = gql`
+    mutation mUpdateChannel($obj: ID!, $obj1: ChannelInput) {
+        channelUpdate(channelIdentifier: $obj, channel: $obj1) {
+            identifier, name, description, identification, owner, read, write, cover,
+            sourceIdentifier, createdAt, modifiedAt, deletedAt
+        }
+    }
+`;
+
+
+export const M_DELETE_CHANNEL = gql`
+    mutation mDeleteChannel($obj: ID!) {
+        channelDelete(channelIdentifier: $obj)
+    }
+`;
+
+// *******************************************************************************************************
 
 // name, identification, project, legal, phone, address1, address2, city, zip, country, members
 export const M_ADD_ENTITY = gql`
@@ -166,6 +193,42 @@ export const M_ADD_ENTITY = gql`
         }
     }
 `;
+
+
+// name, identification, project, legal, phone, address1, address2, city, zip, country, members
+export const M_UPDATE_ENTITY = gql`
+    mutation mEntityUpdate($obj: ID!, $obj1: EntityInput!){
+        entityUpdate(entityIdentifier: $obj, entity: $obj1) {
+            identifier,
+            name,
+            project,
+            identification,
+            legal,
+            phone,
+            address1,
+            address2,
+            city,
+            zip,
+            country,
+            owner,
+            members,
+            groups,
+            channels,
+            contracts,
+            createdAt,
+            modifiedAt,
+            deletedAt
+        }
+    }
+`;
+
+export const M_DELETE_ENTITY = gql`
+    mutation mEntityDelete($obj: ID!){
+        entityDelete(entityIdentifier: $obj)
+    }
+`;
+
+// *******************************************************************************************************
 
 // name, version, description, mode, modality, tags, contractFields
 export const M_ADD_CONTRACT = gql`
