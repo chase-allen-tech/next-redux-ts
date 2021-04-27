@@ -65,6 +65,10 @@
 .sidebar-avatar {
     margin-top: auto;
 }
+
+.sidebar-active {
+    background-color: #f5f5f5 !important;
+}
 .sidebar-layout {
     display: flex;
     flex-direction: column;

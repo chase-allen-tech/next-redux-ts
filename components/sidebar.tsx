@@ -8,31 +8,36 @@ import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import React from 'react';
 import Link from 'next/link';
 import { BookOutlined, BusinessCenter, BusinessCenterOutlined, Dashboard, DashboardOutlined, Group, GroupOutlined, InsertDriveFile, InsertDriveFileOutlined } from '@material-ui/icons';
+import { useRouter } from 'next/router'
 
 const Sidebar = (props) => {
+
+    const router = useRouter();
+    const path = router.pathname;
+
     return (
         <List component="nav" aria-labelledby="nested-lsit-subheader" className="h-100 sidebar-layout">
             <Link href="/">
-                <ListItem button>
+                <ListItem button className={path == '/'? "sidebar-active": ""}>
                     <ListItemIcon><DashboardOutlined className="sidebar-icon sidebar-icon-channel" /></ListItemIcon>
                     <ListItemText primary="Channel" />
                 </ListItem>
             </Link>
             <Link href="/entity">
-                <ListItem button>
+                <ListItem button className={path == '/entity'? "sidebar-active": ""}>
                     <ListItemIcon><BusinessCenterOutlined className="sidebar-icon sidebar-icon-entity" /></ListItemIcon>
                     <ListItemText primary="Entites" />
                 </ListItem>
             </Link>
 
             <Link href="/contact">
-                <ListItem button>
+                <ListItem button className={path == '/contact'? "sidebar-active": ""}>
                     <ListItemIcon><BookOutlined className="sidebar-icon sidebar-icon-contact" /></ListItemIcon>
                     <ListItemText primary="Contracts" />
                 </ListItem>
             </Link>
             <Link href="/group">
-                <ListItem button>
+                <ListItem button className={path == '/group'? "sidebar-active": ""}>
                     <ListItemIcon><GroupOutlined className="sidebar-icon sidebar-icon-group" /></ListItemIcon>
                     <ListItemText primary="Groupes" />
                 </ListItem>
