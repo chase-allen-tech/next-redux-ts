@@ -1,4 +1,7 @@
 import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
+import { graphql } from 'graphql';
+import {flowRight as compose} from 'lodash';
+// import gql from 'graphql-tag';
 
 export const Q_GET_ME = gql`
 {
@@ -12,8 +15,8 @@ export const Q_GET_ME = gql`
 `;
 
 export const Q_GET_CHANNELS_OF_SOURCE = gql`
-    query _($obj: ID!) {
-        channelsOfSource(entityIdentifier: $obj) {
+     query getChannels($obj: ID!) {
+        channelsForSource(entityIdentifier: $obj) {
             identifier,
             name,
             description,
@@ -22,7 +25,6 @@ export const Q_GET_CHANNELS_OF_SOURCE = gql`
             read,
             write,
             cover,
-            contracts,
             sourceIdentifier,
             createdAt,
             modifiedAt,
@@ -51,6 +53,22 @@ export const Q_GET_CHANNELS_OF_COVER = gql`
     }
 `;
 
+export const Q_GET_CONTRACTS = gql`
+    query {
+        contracts {
+            identifier,
+            name,
+            version,
+            description,
+            isActive,
+            owner,
+            tags,
+            accessKeys,
+            channelIdentifier
+        }
+    }
+`;
+
 export const Q_GET_ENTITIES = gql`
     query {
         entities {
@@ -73,17 +91,24 @@ export const Q_GET_ENTITIES = gql`
 `;
 
 export const Q_GET_GROUPS_BY_ENTITY = gql`
-    query _($obj: ID!){
-        groupsByEntity(entityIdentifier: $obj) {
+    query get_groups($obj: ID!){
+        groupsForEntity(entityIdentifier: $obj) {
             identifier,
             name,
             entityIdentifier,
             entity {
-                identifier, name, project, identification, legal, phone, address1, address2, city, zip, country, createdAt, modifiedAt, deletedAt
+                identifier, name
+                # , project, identification, legal, phone, address1, address2, city, zip, country, createdAt, modifiedAt, deletedAt
             }
         }
     }
 `;
+
+
+// export const Q_GET_GROUPS_COMPOSE_ENTITH = compose(
+//     graphql(Q_GET_ENTITIES, {name: 'entities'})
+//     graphql(Q_GET_GROUPS_BY_ENTITY, {name: 'groups', options: ({entities.identifier} => ({variables: {obj}}))})
+// );
 
 // *******************************************************************************************************
 
@@ -130,21 +155,7 @@ export const M_ADD_CHANNEL = gql`
         channelAdd(channel: $obj) {
             identifier,
             name,
-            description,
-            identification,
-            owner,
-            read,
-            write,
-            cover,
-            contracts {
-                identifier, name, version, description, mode, isActive, owner, tags,
-                accessKeys, channelIdentifier,
-           
-            },
-            sourceIdentifier,
             createdAt,
-            modifiedAt,
-            deletedAt
         }
     }
 `;
@@ -229,6 +240,43 @@ export const M_DELETE_ENTITY = gql`
 `;
 
 // *******************************************************************************************************
+export const M_DELETE_CONTRACT = gql`
+    mutation mUpdateContract($obj: ID!, $obj1: ID!) {
+        contractDelete(channelIdentifier: $obj, contractIdentifier: $obj1) {
+            identifier,
+            name,
+            version,
+            description,
+            # mode,
+            # modality,
+            isActive,
+            owner,
+            tags,
+            accessKeys,
+            # contractFields,
+            channelIdentifier
+        }
+    }
+`;
+
+export const M_UPDATE_CONTRACT = gql`
+    mutation mUpdateContract($obj: ID!, $obj1: ID!, $obj2: ContractInput!) {
+        contractUpdate(channelIdentifier: $obj, contractIdentifier: $obj1, contract: $obj2) {
+            identifier,
+            name,
+            version,
+            description,
+            # mode,
+            # modality,
+            isActive,
+            owner,
+            tags,
+            accessKeys,
+            # contractFields,
+            channelIdentifier
+        }
+    }
+`;
 
 // name, version, description, mode, modality, tags, contractFields
 export const M_ADD_CONTRACT = gql`
@@ -250,10 +298,36 @@ export const M_ADD_CONTRACT = gql`
     }
 `;
 
+// *******************************************************************************************************
+
 // name, entityIdentifier
 export const M_ADD_GROUP = gql`
     mutation mAddGroup($obj: GroupInput) {
         groupAdd(group: $obj) {
+            identifier,
+            name,
+            entityIdentifier,
+            entity {
+                name
+            }
+        }
+    }
+`;
+
+export const M_UPDATE_GROUP = gql`
+    mutation mAddGroup($obj: ID!, $obj1: GroupInput) {
+        groupUpdate(groupIdentifier: $obj, group: $obj1) {
+            identifier,
+            name,
+            entityIdentifier,
+            entity
+        }
+    }
+`;
+
+export const M_DELETE_GROUP = gql`
+    mutation mDeleteGroup($obj: ID!) {
+        groupDelete(groupIdentifier: $obj) {
             identifier,
             name,
             entityIdentifier,

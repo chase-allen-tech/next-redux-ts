@@ -13,7 +13,7 @@ import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import { Button } from '@material-ui/core';
 
 const ChannelCard = (props) => {
-    const {ctitle} = props;
+    const {channel} = props;
     const [expanded, setExpanded] = React.useState(false);
 
     const handleExpandClick = () => {
@@ -29,8 +29,8 @@ const ChannelCard = (props) => {
                             <MoreHorizIcon />
                         </IconButton>
                     }
-                    title={ctitle}
-                    subheader="loremipsum.identification"
+                    title={channel.name}
+                    subheader={channel.identifier}
                 />
                 <CardMedia
                     image="/static/images/cards/paella.jpg"
@@ -46,11 +46,11 @@ const ChannelCard = (props) => {
                     <Button className="float-right text-case-none fg-color-primary" style={{ marginTop: "-10px", }} ><u><b>+ Ajouter</b></u></Button>
                     <Typography variant="body2" color="textSecondary" component="div" style={{ clear: "both", }}>
                         <div className="form-inline card-body-inline">
-                            <label htmlFor="">Quotidien - Auto update</label>
+                            <label htmlFor="" className="f-11">Quotidien - Auto update</label>
                             <Button className="float-right fg-color-primary bk-color-secondary shadow-none" variant="contained" size="small">A JOUR</Button>
                         </div>
                         <div className="form-inline card-body-inline mt-1">
-                            <label htmlFor="">Quotidien - Manual ...</label>
+                            <label htmlFor="" className="f-11">Quotidien - Manual ...</label>
                             <Button className="float-right fg-color-primary bk-color-secondary shadow-none" variant="contained" size="small">A JOUR</Button>
                         </div>
                     </Typography>

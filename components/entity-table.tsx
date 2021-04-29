@@ -7,7 +7,8 @@ import CreateIcon from '@material-ui/icons/Create';
 import { useQuery } from '@apollo/client';
 import { Q_GET_ENTITIES, M_UPDATE_ENTITY, M_DELETE_ENTITY } from '../constants/gqlQueries';
 import { useMutation } from '@apollo/client';
-
+import { addEntity } from '../actions/entity_action';
+import { useDispatch } from 'react-redux';
 
 const EntityTable = (props) => { 
     // State 
@@ -19,6 +20,10 @@ const EntityTable = (props) => {
     const rows = data != undefined && data.hasOwnProperty("entities") ? data.entities : [];
     const [update_entity] = useMutation(M_UPDATE_ENTITY);
     const [delete_entity] = useMutation(M_DELETE_ENTITY);
+
+    // Store in Redux
+    const dispatch = useDispatch();
+    dispatch(addEntity(rows));
 
     // Pagination
     const [page, setPage] = React.useState(0);
@@ -48,10 +53,11 @@ const EntityTable = (props) => {
     };
 
     // Actions
-    const onDeleteEntity = async (e) => {
+    const onDeleteEntity = async (id) => {
         if (!confirm("Are you going to delete this record?")) return;
         try {
-            let result = await delete_entity({ variables: { obj: identifier } });
+            console.log(rows[id].identifier);
+            let result = await delete_entity({ variables: { obj: rows[id].identifier } });
             console.log(result);
         } catch (error) {
             console.log(error);
@@ -77,12 +83,13 @@ const EntityTable = (props) => {
 
             let result = await update_entity({ variables: { obj: identifier, obj1: payload } });
             alert("Successfully Updated");
-            handleClose();
-            setReload(true);
+            
         } catch (error) {
             console.log(error);
             alert("There is something wrong in your data");
         }
+        handleClose();
+            setReload(true);
     }
 
     return (

@@ -4,36 +4,21 @@ import {
 } from '../constants/actionTypes';
 
 export const initialState = {
-    item: {
-        value: '',
-    },
     data: [],
 };
+  
 
 const channel = (state = initialState, action) => {
-    const { type, item, } = action;
+    const { type, items, } = action;
 
     switch (type) {
         case GET_CHANNELS: {
-            return Object.assign({}, state, {
-                item,
-            });
+            return { ...state.data };
         }
 
         case ADD_CHANNEL: {
-            if (item.value === '') {
-                return state;
-            }
-
-            return Object.assign({}, state, {
-                item: {
-                    value: '',
-                },
-                data: [
-                    ...(state.data),
-                    item,
-                ],
-            });
+            if (items === '') { return state; }
+            return { ...state, data: Array.from(new Set([...state.data, ...items]))};
         }
         default: {
             return state;

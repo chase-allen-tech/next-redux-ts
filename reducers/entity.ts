@@ -4,36 +4,20 @@ import {
 } from '../constants/actionTypes';
 
 export const initialState = {
-    item: {
-        value: '',
-    },
     data: [],
 };
 
 const entity = (state = initialState, action) => {
-    const { type, item, } = action;
+    const { type, items, } = action;
 
     switch (type) {
         case GET_ENTITIES: {
-            return Object.assign({}, state, {
-                item,
-            });
+            return { ...state.data };
         }
 
         case ADD_ENTITY: {
-            if (item.value === '') {
-                return state;
-            }
-
-            return Object.assign({}, state, {
-                item: {
-                    value: '',
-                },
-                data: [
-                    ...(state.data),
-                    item,
-                ],
-            });
+            if (items.length == 0) { return state; }
+            return { ...state, data: Array.from(new Set([...state.data, ...items]))};
         }
         default: {
             return state;

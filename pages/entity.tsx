@@ -6,18 +6,18 @@ import { RootState } from '../reducers';
 import { Backdrop, Button, Container, Fab, Fade, Grid, Modal, TextField } from '@material-ui/core';
 import ChannelCard from '../components/channel-card';
 import EntityTable from '../components/entity-table';
-import { addEntity } from '../actions/entity_action';
 
 import { useMutation } from '@apollo/client';
 import { M_ADD_ENTITY } from '../constants/gqlQueries';
+
+// Action
+import { addEntity } from '../actions/entity_action';
 
 const Entity = (props) => {
 
     const { item, data } = useSelector((state: RootState) => state.todo);
     const dispatch = useDispatch();
     const [add_entity] = useMutation(M_ADD_ENTITY); // For GQL
-
-    
 
     // For Chield Component Reload
     const [reload, setReload] = React.useState(false);

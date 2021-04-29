@@ -4,37 +4,21 @@ import {
 } from '../constants/actionTypes';
 
 export const initialState = {
-    item: {
-        value: '',
-    },
     data: [],
 };
 
+
 const group = (state = initialState, action) => {
-    const { type, item, } = action;
+    const { type, items, } = action;
 
     switch (type) {
         case GET_GROUPS: {
-            return { ...state, item }
-            // return Object.assign({}, state, {
-            //     item,
-            // });
+            return { ...state.data };
         }
 
         case ADD_GROUP: {
-            if (item.value === '') {
-                return state;
-            }
-
-            return Object.assign({}, state, {
-                item: {
-                    value: '',
-                },
-                data: [
-                    ...(state.data),
-                    item,
-                ],
-            });
+            if (items === '') { return state; }
+            return { ...state, data: Array.from(new Set([...state.data, ...items]))};
         }
         default: {
             return state;

@@ -30,8 +30,8 @@ const Sidebar = (props) => {
                 </ListItem>
             </Link>
 
-            <Link href="/contact">
-                <ListItem button className={path == '/contact'? "sidebar-active": ""}>
+            <Link href="/contract">
+                <ListItem button className={path == '/contract'? "sidebar-active": ""}>
                     <ListItemIcon><BookOutlined className="sidebar-icon sidebar-icon-contact" /></ListItemIcon>
                     <ListItemText primary="Contracts" />
                 </ListItem>

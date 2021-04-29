@@ -12,7 +12,7 @@ import { Backdrop, Button, Fab, Fade, Modal } from '@material-ui/core';
 
 
 
-const ContactCard = (props) => {
+const ContractCard = (props) => {
     const { ctitle } = props;
     const [expanded, setExpanded] = React.useState(false);
 
@@ -169,4 +169,4 @@ const ContactCard = (props) => {
     );
 };
 
-export default ContactCard;
+export default ContractCard;
