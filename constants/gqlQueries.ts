@@ -1,6 +1,6 @@
 import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
 import { graphql } from 'graphql';
-import {flowRight as compose} from 'lodash';
+import { flowRight as compose } from 'lodash';
 // import gql from 'graphql-tag';
 
 export const Q_GET_ME = gql`
@@ -69,6 +69,17 @@ export const Q_GET_CONTRACTS = gql`
     }
 `;
 
+export const Q_GET_CONTRACTS_FOR_CHANNEL = gql`
+    query getContracts($obj: ID!) {
+        contractsForChannel(
+            channelIdentifier: $obj
+        ) {
+            identifier,
+            name
+        }
+    }
+`;
+
 export const Q_GET_ENTITIES = gql`
     query {
         entities {
@@ -123,8 +134,8 @@ export const M_ADD_USER = gql`
 `;
 
 export const M_SET_ME = gql`
-    mutation {
-        setMe(identifier: "cddcd0dd-d868-4977-b763-587b80d17321") {
+    mutation setUser($obj: ID!){
+        setMe(identifier: $obj) {
             me {
                 name
             }

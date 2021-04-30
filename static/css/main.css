@@ -254,3 +254,18 @@
 .border-right-none {
     border-right: none !important;
 }
+
+.nav-auth a {
+    color: #65C3A9;
+    margin-right: 10px;
+}
+
+.nav-auth a:hover {
+    color: #D5D5D5;
+    text-decoration: none;
+}
+
+.login-field {
+    width: 100%;
+    margin: 10px !important;
+}

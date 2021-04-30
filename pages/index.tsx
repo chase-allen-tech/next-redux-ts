@@ -4,7 +4,7 @@ import { addChannel, getChannels } from '../actions/channel_action';
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../reducers';
-import { Backdrop, Button, Container, Fab, Fade, Grid, Modal, TextField } from '@material-ui/core';
+import { Backdrop, Button, CircularProgress, Container, Fab, Fade, Grid, Modal, TextField } from '@material-ui/core';
 import ChannelCard from '../components/channel-card';
 import PaginationAction from '../components/pagination-action';
 import { useLazyQuery, useMutation, useQuery } from '@apollo/client';
@@ -12,34 +12,38 @@ import { M_ADD_CHANNEL, M_DELETE_CHANNEL, M_DELETE_ENTITY, M_UPDATE_CHANNEL, Q_G
 
 let rows = [];
 const Channel = (props) => {
-    const entityIdentifier = "3e84ff79-c4e7-42bc-8f08-210151e3bf77";
 
     ////////////////////// State ////////////////////////////
     const [reload, setReload] = React.useState(false);
-    const [counter, setCounter] = React.useState(0);
+    const [d_loading, setDLoading] = React.useState(true);
     const [lazyStart, setLazyStart] = React.useState(false);
     useEffect(() => { setReload(false); });
 
     ////////////////////// Server Data ////////////////////////////
-    const { loading, error, data: entities } = useQuery(Q_GET_ENTITIES, { fetchPolicy: "network-only" });
+    const { loading, error, data: entities } = useQuery(Q_GET_ENTITIES, { fetchPolicy: reload ? "no-cache" : "cache-and-network" });
     const entities_row = entities != undefined && entities.hasOwnProperty('entities') ? entities.entities : [];
-    const [start_sec, { loading: loading1, error: error1, data: channel_data }] = useLazyQuery(Q_GET_CHANNELS_OF_SOURCE, { variables: { obj: entityIdentifier }, fetchPolicy: reload ? "no-cache" : "cache-and-network" })
-    // const rows = data != undefined && data.hasOwnProperty("channelsForSource") ? data.channelsForSource : [];
+
+    const { refetch } = useQuery(Q_GET_CHANNELS_OF_SOURCE, { fetchPolicy: "no-cache"  })
+
+    const getChannelsFromEntity = async () => {
+        setDLoading(true);
+        console.log("GETTING DATA");
+        if(entities.entities.length <= 0) return;
+        for (let i = 0; i < entities.entities.length; i++) {
+            try {
+                const res = await refetch({ obj: entities.entities[i].identifier});
+                console.log(res);
+                rows = [...rows, ...res.data.channelsForSource];
+                rows =  Array.from(new Set(rows.map(item => JSON.stringify(item)))).map(ite => JSON.parse(ite));
+            } catch (error) {
+                console.log(error);
+            } 
+        }
+        setDLoading(false);
+    }
     if (!loading && !error && !lazyStart) {
         setLazyStart(true);
-        if (entities.entities.length > 0) {
-            start_sec({ variables: { obj: entities.entities[0].identifier } });
-        }
-        setCounter(counter + 1);
-    }
-    if (channel_data != undefined && channel_data && channel_data.hasOwnProperty('channelsForSource')) {
-        rows = [...rows, ...channel_data.channelsForSource];
-        rows = Array.from(new Set(rows.map(item => JSON.stringify(item)))).map(ite => JSON.parse(ite));
-        console.log(entities, counter);
-        if ( entities != undefined && counter < entities.entities.length) {
-            start_sec({ variables: { obj: entities.entities[counter].identifier }, });
-            setCounter(counter + 1);
-        }
+        getChannelsFromEntity();
     }
 
     const [update_channel] = useMutation(M_UPDATE_CHANNEL);
@@ -126,7 +130,7 @@ const Channel = (props) => {
             alert("Successfully Added");
             handleClose();
             setReload(true);
-            setCounter(0);
+            getChannelsFromEntity();
         } catch (error) {
             console.log(error);
             alert("There is something wrong in your data");
@@ -135,9 +139,12 @@ const Channel = (props) => {
 
     return (
         <Container>
+            
 
             <div className="d-flex  justify-bt">
-                <div className="content-title">Channels</div>
+                <div className="content-title">Channels
+                {d_loading || loading ? <span className="ml-4"><CircularProgress /></span> : <></>}</div>
+                
                 <Fab onClick={e => handleOpen(-1)} variant="extended" size="medium" className="bk-color-primary float-right mt-4"><span className="ml-4 mr-4 text-white text-case-none"><b>Ajouter une channels +</b></span></Fab>
             </div>
 

@@ -21,7 +21,7 @@ const GroupTable = (props) => {
     useEffect(() => { setReload(false); });
 
     // Server Data 
-    const { loading, error, data: entities } = useQuery(Q_GET_ENTITIES, { fetchPolicy: "network-only" });
+    const { loading, error, data: entities } = useQuery(Q_GET_ENTITIES, { fetchPolicy: reload ? "no-cache" : "cache-and-network" });
     let [start_sec, { loading: loading1, error: error1, data: group_data }] = useLazyQuery(Q_GET_GROUPS_BY_ENTITY, {fetchPolicy: "network-only"});
     if (!loading && !error && !lazyStart) {
         setLazyStart(true);

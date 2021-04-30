@@ -19,16 +19,6 @@ interface AppContext extends NextPageContext {
 class MyApp extends App<AppContext> {
 
     render() {
-        // const errorLink = onError(({ graphQLErrors, networkError }) => {
-        //     if (graphQLErrors) {
-        //         console.log('graphQLErrors', graphQLErrors);
-        //     }
-        //     if (networkError) {
-        //         console.log('networkError', networkError);
-        //     }
-        // });
-
-        // const link = ApolloLink.from([errorLink]);
 
         const client = new ApolloClient({
             uri: 'https://preprod.smart4.digital/admin',
