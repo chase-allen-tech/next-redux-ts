@@ -7,15 +7,16 @@ import { M_ADD_USER } from "../constants/gqlQueries";
 
 const Register = (props) => {
 
-    const [add_user] = useMutation(M_ADD_USER);
+    // State
     const [values, setValues] = React.useState({
         name: '', email: ''
-    })
+    });
+    const handleChange = (prop) => (event) => { setValues({ ...values, [prop]: event.target.value }); };
 
-    const handleChange = (prop) => (event) => {
-        setValues({ ...values, [prop]: event.target.value });
-    };
+    // Graph QL
+    const [add_user] = useMutation(M_ADD_USER);
 
+    // Action
     const onAddUser = async (e) => {
         e.preventDefault();
         try {
@@ -26,7 +27,6 @@ const Register = (props) => {
         } catch (error) {
             alert("There is something wrong in your server");
         }
-
     }
 
     return (

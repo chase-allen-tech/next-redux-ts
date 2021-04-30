@@ -1,7 +1,4 @@
-import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
-import { graphql } from 'graphql';
-import { flowRight as compose } from 'lodash';
-// import gql from 'graphql-tag';
+import { gql } from '@apollo/client';
 
 export const Q_GET_ME = gql`
 {
@@ -114,12 +111,6 @@ export const Q_GET_GROUPS_BY_ENTITY = gql`
         }
     }
 `;
-
-
-// export const Q_GET_GROUPS_COMPOSE_ENTITH = compose(
-//     graphql(Q_GET_ENTITIES, {name: 'entities'})
-//     graphql(Q_GET_GROUPS_BY_ENTITY, {name: 'groups', options: ({entities.identifier} => ({variables: {obj}}))})
-// );
 
 // *******************************************************************************************************
 
@@ -291,20 +282,10 @@ export const M_UPDATE_CONTRACT = gql`
 
 // name, version, description, mode, modality, tags, contractFields
 export const M_ADD_CONTRACT = gql`
-    mutation mAddContract($obj: ID!, $obj1: ContractInput!) {
-        contractAdd(channelIdentifier: $obj, cntract: $obj1) {
-            identifier,
-            name,
-            version,
-            description,
-            mode,
-            modality,
-            isActive,
-            owner,
-            tags,
-            accessKeys,
-            contractFields,
-            channelIdentifier
+    mutation contractCreation($obj: ContractInput!) {
+        contractAdd(contract: $obj) {
+            identifier
+            name
         }
     }
 `;

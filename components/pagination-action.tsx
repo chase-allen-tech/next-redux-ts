@@ -5,22 +5,14 @@ import { usePagination } from '@material-ui/lab/Pagination';
 function PaginationAction(props) {
     const { count, page, rowsPerPage, onChangePage } = props;
 
-    const { items } = usePagination({
-        count: Math.ceil(count / rowsPerPage),
-    });
+    const { items } = usePagination({ count: Math.ceil(count / rowsPerPage), });
 
     const handleNextPrevButtonClick = (event, type) => {
-        if(type == 'previous') {
-            onChangePage(event, page - 1);    
-        } else {
-            onChangePage(event, page + 1);
-        }
+        if(type == 'previous') {  onChangePage(event, page - 1); } 
+        else { onChangePage(event, page + 1); }
     };
 
-    const handleChange = (event, val) => {
-        console.log(val);
-        onChangePage(event, val - 1);
-    }
+    const handleChange = (event, val) => { onChangePage(event, val - 1); }
 
     return (
         <nav>

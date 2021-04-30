@@ -20,11 +20,13 @@ class MyApp extends App<AppContext> {
 
     render() {
 
+        // Init Graph QL
         const client = new ApolloClient({
             uri: 'https://preprod.smart4.digital/admin',
             cache: new InMemoryCache(),
         });
         const { store, Component, ...props } = this.props;
+        
         return (
             <>
                 <Head>

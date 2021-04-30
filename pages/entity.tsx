@@ -1,40 +1,30 @@
 import { connect } from 'react-redux';
-import { addTodo, deleteTodo, onChangeTodo } from '../actions';
 import React, { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { RootState } from '../reducers';
 import { Backdrop, Button, Container, Fab, Fade, Grid, Modal, TextField } from '@material-ui/core';
-import ChannelCard from '../components/channel-card';
 import EntityTable from '../components/entity-table';
 
 import { useMutation } from '@apollo/client';
 import { M_ADD_ENTITY } from '../constants/gqlQueries';
 
-// Action
-import { addEntity } from '../actions/entity_action';
-
 const Entity = (props) => {
 
-    const { item, data } = useSelector((state: RootState) => state.todo);
-    const dispatch = useDispatch();
-    const [add_entity] = useMutation(M_ADD_ENTITY); // For GQL
-
-    // For Chield Component Reload
+    // State
     const [reload, setReload] = React.useState(false);
-    useEffect(() => { setReload(false); });
-
-    // Modal
-    const [open, setOpen] = React.useState(false);
     const [values, setValues] = React.useState({
         name: '', identification: '', project: '', legal: 'authority', phone: '', address1: '', address2: '', city: '', zip: '', country: '', members: ['001']
     });
+    const handleChange = (prop) => (event) => { setValues({ ...values, [prop]: event.target.value }); };
+    useEffect(() => { setReload(false); });
+
+    // Graph QL
+    const [add_entity] = useMutation(M_ADD_ENTITY);
+
+    // Modal
+    const [open, setOpen] = React.useState(false);
     const handleOpen = () => { setOpen(true); };
     const handleClose = () => { setOpen(false); };
 
-    const handleChange = (prop) => (event) => {
-        setValues({ ...values, [prop]: event.target.value });
-    };
-
+    // Action
     const onAddEntity = async (e) => {
         e.preventDefault();
         try {
@@ -72,7 +62,7 @@ const Entity = (props) => {
             >
                 <Fade in={open}>
                     <div className="channel-modal-content overflow-y-auto">
-                        <h6 className="fg-color-primary mb-4">Ajouter un channel</h6>
+                        <h6 className="fg-color-primary mb-4">Ajouter un entity</h6>
                         <form action="/" method="POST" onSubmit={onAddEntity}>
                             <div className="form-group">
                                 <label htmlFor=""><b>Nom</b></label>

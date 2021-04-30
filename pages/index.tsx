@@ -1,38 +1,43 @@
 import { connect } from 'react-redux';
-import { addTodo, deleteTodo, onChangeTodo } from '../actions';
-import { addChannel, getChannels } from '../actions/channel_action';
 import React, { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { RootState } from '../reducers';
-import { Backdrop, Button, CircularProgress, Container, Fab, Fade, Grid, Modal, TextField } from '@material-ui/core';
+import { Backdrop, CircularProgress, Container, Fab, Fade, Grid, Modal, TextField } from '@material-ui/core';
 import ChannelCard from '../components/channel-card';
 import PaginationAction from '../components/pagination-action';
-import { useLazyQuery, useMutation, useQuery } from '@apollo/client';
-import { M_ADD_CHANNEL, M_DELETE_CHANNEL, M_DELETE_ENTITY, M_UPDATE_CHANNEL, Q_GET_CHANNELS_OF_SOURCE, Q_GET_ENTITIES } from '../constants/gqlQueries';
+import { useMutation, useQuery } from '@apollo/client';
+import { M_ADD_CHANNEL, M_DELETE_CHANNEL, M_UPDATE_CHANNEL, Q_GET_CHANNELS_OF_SOURCE, Q_GET_ENTITIES } from '../constants/gqlQueries';
 
 let rows = [];
 const Channel = (props) => {
 
-    ////////////////////// State ////////////////////////////
-    const [reload, setReload] = React.useState(false);
-    const [d_loading, setDLoading] = React.useState(true);
-    const [lazyStart, setLazyStart] = React.useState(false);
+    // State
+    const [reload, setReload] = React.useState(false);          // For entity loading
+    const [d_loading, setDLoading] = React.useState(true);      // For channel loading
+    const [lazyStart, setLazyStart] = React.useState(false);    // For constructor(one time action)
+    const [identifier, setIdentifier] = React.useState(null);   // channel identifier for edit modal
+    const [values, setValues] = React.useState({                // input values
+        identifier: '', name: '', description: '', identification: '', owner: '', read: '', write: '',
+        cover: '', contracts: '', sourceIdentifier: '', createdAt: '', modifiedAt: '', deletedAt: ''
+    });
+    const handleChange = (prop) => (event) => { setValues({ ...values, [prop]: event.target.value }); };
     useEffect(() => { setReload(false); });
 
-    ////////////////////// Server Data ////////////////////////////
+    // Graph QL
     const { loading, error, data: entities } = useQuery(Q_GET_ENTITIES, { fetchPolicy: reload ? "no-cache" : "cache-and-network" });
+    const { refetch } = useQuery(Q_GET_CHANNELS_OF_SOURCE, { fetchPolicy: "no-cache"  })
+    const [update_channel] = useMutation(M_UPDATE_CHANNEL);
+    const [delete_channel] = useMutation(M_DELETE_CHANNEL);
+    const [add_channel] = useMutation(M_ADD_CHANNEL);
     const entities_row = entities != undefined && entities.hasOwnProperty('entities') ? entities.entities : [];
 
-    const { refetch } = useQuery(Q_GET_CHANNELS_OF_SOURCE, { fetchPolicy: "no-cache"  })
-
+    // Fetch channels data from entity ids
     const getChannelsFromEntity = async () => {
         setDLoading(true);
-        console.log("GETTING DATA");
+        console.log("GETTING DATA ", entities);
         if(entities.entities.length <= 0) return;
         for (let i = 0; i < entities.entities.length; i++) {
             try {
                 const res = await refetch({ obj: entities.entities[i].identifier});
-                console.log(res);
+                console.log("Channels from Entity", res);
                 rows = [...rows, ...res.data.channelsForSource];
                 rows =  Array.from(new Set(rows.map(item => JSON.stringify(item)))).map(ite => JSON.parse(ite));
             } catch (error) {
@@ -41,32 +46,21 @@ const Channel = (props) => {
         }
         setDLoading(false);
     }
+
+    // If entity is loaded, then start fetching channel data
     if (!loading && !error && !lazyStart) {
         setLazyStart(true);
         getChannelsFromEntity();
     }
 
-    const [update_channel] = useMutation(M_UPDATE_CHANNEL);
-    const [delete_channel] = useMutation(M_DELETE_CHANNEL);
-    const [add_channel] = useMutation(M_ADD_CHANNEL);
-
-    ////////////////////// Pagination Start ////////////////////////////
+    // Pagination
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(8);
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
     const handleChangePage = (event, newPage) => { setPage(newPage); };
-    const handleChangeRowsPerPage = (event) => {
-        setRowsPerPage(parseInt(event.target.value, 10));
-        setPage(0);
-    };
 
-    ////////////////////// Modal Start ////////////////////////////
+    // Modal
     const [open, setOpen] = React.useState(false);
-    const [identifier, setIdentifier] = React.useState(null);
-    const [values, setValues] = React.useState({
-        identifier: '', name: '', description: '', identification: '', owner: '', read: '', write: '',
-        cover: '', contracts: '', sourceIdentifier: '', createdAt: '', modifiedAt: '', deletedAt: ''
-    });
     const handleOpen = (id) => {
         if (id >= 0) {
             setValues(rows[id]);
@@ -81,11 +75,8 @@ const Channel = (props) => {
         setOpen(true);
     };
     const handleClose = () => { setOpen(false); };
-    const handleChange = (prop) => (event) => {
-        setValues({ ...values, [prop]: event.target.value });
-    };
 
-    ////////////////////// Action Start ////////////////////////////
+    // Action
     const onDeleteChannel = async (e) => {
         if (!confirm("Are you going to delete this record?")) return;
         try {
@@ -123,10 +114,7 @@ const Channel = (props) => {
                 "cover": [values.cover],
                 "sourceIdentifier": values.sourceIdentifier
             }
-            console.log(payload);
-
             let result = await add_channel({ variables: { obj: payload } });
-            console.log(result);
             alert("Successfully Added");
             handleClose();
             setReload(true);
@@ -139,8 +127,6 @@ const Channel = (props) => {
 
     return (
         <Container>
-            
-
             <div className="d-flex  justify-bt">
                 <div className="content-title">Channels
                 {d_loading || loading ? <span className="ml-4"><CircularProgress /></span> : <></>}</div>
@@ -219,52 +205,6 @@ const Channel = (props) => {
                 </Fade>
             </Modal>
         </Container>
-
-        //     <React.Fragment>
-        //     <form onSubmit={(e) => {
-        //         e.preventDefault();
-        //         dispatch(addTodo( item ));
-        //     }}>
-        //         <TextField id="standard-basic" type="text" value={item.value} label="Input Value"
-        //             onChange={e => getChannels( e.target.value)} />
-        //         <br />
-        //         <input type="submit" value="SUBMIT" style={{ display: 'none', }} />
-        //     </form>
-        //     <hr />
-        //     {data.map((item, index) => (
-        //         <p key={index}>
-        //             {item}
-        //             {' '}
-        //             <Button onClick={() => dispatch(deleteTodo(item))} variant="contained" color="primary" >
-        //                 DELETE
-        //             </Button>
-        //         </p>
-        //     ))}
-        // </React.Fragment>
-
-        // <React.Fragment>
-        //   <form onSubmit={(e) => {
-        //     e.preventDefault();
-        //     dispatch(addTodo({
-        //       value: item.value,
-        //     }));
-        //   }}>
-        //     <TextField id="standard-basic" type="text" value={item.value} label="Input Value"
-        //       onChange={e => dispatch(onChangeTodo({ value: e.target.value, }))} />
-        //     <br />
-        //     <input type="submit" value="SUBMIT" style={{ display: 'none', }}/>
-        //   </form>
-        //   <hr />
-        //   {data.map((item, index) => (
-        //     <p key={index}>
-        //       {item.value}
-        //       {' '}
-        //       <Button onClick={() => dispatch(deleteTodo(item))} variant="contained" color="primary" >
-        //         DELETE
-        //       </Button>
-        //     </p>
-        //   ))}
-        // </React.Fragment>
     );
 };
 

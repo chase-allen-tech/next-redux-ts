@@ -5,7 +5,7 @@ import CheckIcon from '@material-ui/icons/Check';
 import CloseIcon from '@material-ui/icons/Close';
 import SearchIcon from '@material-ui/icons/Search';
 import AddIcon from '@material-ui/icons/Add';
-import { useLazyQuery, useMutation, useQuery } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 import { M_ADD_GROUP, Q_GET_ENTITIES, Q_GET_GROUPS_BY_ENTITY } from '../constants/gqlQueries';
 import PaginationAction from '../components/pagination-action';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
@@ -14,19 +14,21 @@ import CreateIcon from '@material-ui/icons/Create';
 let rows = [];
 const Group = (props) => {
 
-    const [d_loading, setDLoading] = React.useState(true);
-    const [lazyStart, setLazyStart] = React.useState(false);
-    const [reload, setReload] = React.useState(false);
-    useEffect(() => { setReload(false); });
+    // State
+    const [d_loading, setDLoading] = React.useState(true);      // For delayed loading
+    const [lazyStart, setLazyStart] = React.useState(false);    // For lazy loading
+    const [reload, setReload] = React.useState(false);          // If true, then fetch entity data from network not from cache
+    const [values, setValues] = React.useState({ name: '', entityIdentifier: '' }); // Set input values
+    const handleChange = (prop) => (event) => { setValues({ ...values, [prop]: event.target.value }); };
+    useEffect(() => { setReload(false); });                     // If component mounted, then stop reloading
 
-    // Server Data
+    // Graph QL
     const [add_group] = useMutation(M_ADD_GROUP);
     const { loading, error, data: entities } = useQuery(Q_GET_ENTITIES, { fetchPolicy: reload ? "no-cache" : "cache-and-network" });
-    const entities_row = entities != undefined && entities.hasOwnProperty('entities') ? entities.entities : [];
-    
     let { refetch } = useQuery(Q_GET_GROUPS_BY_ENTITY, { fetchPolicy: "no-cache"});
+    const entities_row = entities != undefined && entities.hasOwnProperty('entities') ? entities.entities : [];
 
-
+    // Get groups by entity ids
     const getGroupsFromEntity = async () => {
         setDLoading(true);
         console.log("GETTING DATA");
@@ -43,6 +45,7 @@ const Group = (props) => {
         setDLoading(false);
     }
 
+    // If there is entity data then fetch group data based on entity ID
     if (!loading && !error && !lazyStart) {
         setLazyStart(true);
         getGroupsFromEntity();
@@ -50,14 +53,8 @@ const Group = (props) => {
 
     // Modal
     const [open, setOpen] = React.useState(false);
-    const [values, setValues] = React.useState({ name: '', entityIdentifier: '' });
-
     const handleOpen = () => { setOpen(true); };
     const handleClose = () => { setOpen(false); };
-
-    const handleChange = (prop) => (event) => {
-        setValues({ ...values, [prop]: event.target.value });
-    };
 
     // Action
     const onAddGroup = async (e) => {
@@ -66,8 +63,8 @@ const Group = (props) => {
             let result = await add_group({ variables: { obj: values } });
             alert("Successfully Added");
             handleClose();
-            getGroupsFromEntity();
-            setReload(true);
+            setReload(true); // Reload entity data
+            getGroupsFromEntity(); // Reload groups dat
         } catch (error) {
             console.log(error);
             alert("There is something wrong in your data");

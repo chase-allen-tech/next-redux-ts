@@ -10,20 +10,14 @@ import Typography from '@material-ui/core/Typography';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import { Backdrop, Button, Fab, Fade, Modal } from '@material-ui/core';
 
-
-
 const ContractCard = (props) => {
     const { ctitle } = props;
     const [expanded, setExpanded] = React.useState(false);
 
-    const handleExpandClick = () => {
-        setExpanded(!expanded);
-    };
+    const handleExpandClick = () => { setExpanded(!expanded); };
 
     ///////////////////////////// Modal /////////////////////////////
-    function createData(name, calories, fat) {
-        return { name, calories, fat };
-    }
+    function createData(name, calories, fat) { return { name, calories, fat }; }
 
     const rows = [
         createData('Cupcake', 305, 3.7),
@@ -41,26 +35,8 @@ const ContractCard = (props) => {
         createData('Oreo', 437, 18.0),
     ].sort((a, b) => (a.calories < b.calories ? -1 : 1));
     const [open, setOpen] = React.useState(false);
-    const [values, setValues] = React.useState({
-        amount: '',
-        password: '',
-        weight: '',
-        weightRange: '',
-        showPassword: false,
-    });
-
-    const handleOpen = () => {
-        console.log('ENTER');
-        setOpen(true);
-    };
-
-    const handleClose = () => {
-        setOpen(false);
-    };
-
-    const handleChange = (prop) => (event) => {
-        setValues({ ...values, [prop]: event.target.value });
-    };
+    const handleOpen = () => { setOpen(true); };
+    const handleClose = () => { setOpen(false); };
 
     ////////////////////////// End Modal /////////////////////////////////
     return (

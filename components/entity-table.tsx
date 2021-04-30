@@ -4,9 +4,8 @@ import PaginationAction from './pagination-action';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import CreateIcon from '@material-ui/icons/Create';
 
-import { useQuery } from '@apollo/client';
 import { Q_GET_ENTITIES, M_UPDATE_ENTITY, M_DELETE_ENTITY } from '../constants/gqlQueries';
-import { useMutation } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 import { addEntity } from '../actions/entity_action';
 import { useDispatch } from 'react-redux';
 
@@ -42,15 +41,13 @@ const EntityTable = (props) => {
         name: '', identification: '', project: '', legal: 'authority', phone: '', address1: '', address2: '', city: '', zip: '', country: '', members: ['001']
     });
     const handleOpen = (id) => {
-        setValues(rows[id]);
-        setIdentifier(rows[id].identifier);
+        const rid = page * rowsPerPage + id;
+        setValues(rows[rid]);
+        setIdentifier(rows[rid].identifier);
         setOpen(true);
     };
     const handleClose = () => { setOpen(false); };
-
-    const handleChange = (prop) => (event) => {
-        setValues({ ...values, [prop]: event.target.value });
-    };
+    const handleChange = (prop) => (event) => { setValues({ ...values, [prop]: event.target.value }); };
 
     // Actions
     const onDeleteEntity = async (id) => {
@@ -216,7 +213,6 @@ const EntityTable = (props) => {
                     </div>
                 </Fade>
             </Modal>
-
         </>
     );
 };

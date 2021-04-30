@@ -6,12 +6,17 @@ import { M_ADD_USER, M_SET_ME } from "../constants/gqlQueries";
 import React, { useEffect } from 'react';
 
 const Login = (props) => {
-
-    const [set_user] = useMutation(M_SET_ME);
+    
+    // State
     const [values, setValues] = React.useState({
         identifier: ''
-    })
+    });
+    const handleChange = (prop) => (event) => { setValues({ ...values, [prop]: event.target.value }); };
 
+    // Graph QL
+    const [set_user] = useMutation(M_SET_ME);
+
+    // Action
     const onAddUser = async (e) => {
         e.preventDefault();
         try {
@@ -21,12 +26,7 @@ const Login = (props) => {
         } catch (error) {
             alert("There is something error in server");
         }
-
     }
-
-    const handleChange = (prop) => (event) => {
-        setValues({ ...values, [prop]: event.target.value });
-    };
 
     return (
         <Container>
@@ -36,7 +36,7 @@ const Login = (props) => {
             <Grid container spacing={0}>
                 <Grid item xs={12} sm={6} md={6}>
                     <form onSubmit={onAddUser}>
-                        <TextField value={values.identifier} onChange={handleChange('identifier')} id="outlined-basic" label="name" variant="outlined" className="login-field" />
+                        <TextField value={values.identifier} onChange={handleChange('identifier')} id="outlined-basic" label="ID" variant="outlined" className="login-field" />
                         <Fab type="submit" variant="extended" color="primary" aria-label="add" className="float-right">
                             <NavigationIcon/>
                             Login
